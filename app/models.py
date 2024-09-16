@@ -5,6 +5,7 @@ from sqlalchemy.orm import declarative_base, Mapped, mapped_column, sessionmaker
 from sqlalchemy import Integer, String, ForeignKey
 import os
 from dotenv import load_dotenv
+import configparser
 
 load_dotenv()
 
@@ -14,6 +15,9 @@ PASSWORD = os.getenv('PASSWORD')
 
 
 def create_database_if_not_exists(db_name, user, password, host='localhost', port='5432'):
+    """
+    Подключение к Postgresql и создание базы данных
+    """
     with psycopg2.connect(user=user, password=password, host=host, port=port) as conn:
         with conn.cursor() as cursor:
             cursor.execute(sql.SQL("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s"), [db_name])
@@ -23,17 +27,22 @@ def create_database_if_not_exists(db_name, user, password, host='localhost', por
         conn.autocommit = True
         with conn.cursor() as cursor:
             cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(db_name)))
-            print(f"База данных '{db_name}' создана.")
-    else:
-        print(f"База данных '{db_name}' уже существует.")
 
 
 create_database_if_not_exists(DB_NAME, USER, PASSWORD)
 
-DATABASE_URL = f"postgresql://{USER}:{PASSWORD}@localhost/{DB_NAME}"
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@localhost/{DB_NAME}"
 
+# Динамическое обновление alembic.ini
+config = configparser.ConfigParser()
+config.read('alembic.ini')
+config['alembic']['sqlalchemy.url'] = DATABASE_URL
+with open('alembic.ini', 'w') as configfile:
+    config.write(configfile)
+
+
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
 
