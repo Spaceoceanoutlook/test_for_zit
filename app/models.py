@@ -1,7 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, Mapped, mapped_column, sessionmaker, relationship
+from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, ForeignKey
 import os
 from dotenv import load_dotenv
@@ -41,8 +40,6 @@ with open('alembic.ini', 'w') as configfile:
     config.write(configfile)
 
 
-engine = create_engine(DATABASE_URL)
-Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
 
