@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2 import sql
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, Mapped, mapped_column, sessionmaker
+from sqlalchemy.orm import declarative_base, Mapped, mapped_column, sessionmaker, relationship
 from sqlalchemy import Integer, String, ForeignKey
 import os
 from dotenv import load_dotenv
@@ -52,6 +52,8 @@ class ProductType(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
 
+    products: Mapped[list["Product"]] = relationship("Product", back_populates="product_type")
+
 
 class Product(Base):
     __tablename__ = "product"
@@ -59,3 +61,5 @@ class Product(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
     product_type_id: Mapped[int] = mapped_column(ForeignKey('product_type.id'))
+
+    product_type: Mapped[ProductType] = relationship("ProductType", back_populates="products")
