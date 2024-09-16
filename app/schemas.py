@@ -13,3 +13,8 @@ class ProductResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ProductCreate(BaseModel):
+    name: str
+    product_type_id: int
