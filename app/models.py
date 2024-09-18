@@ -8,24 +8,31 @@ import configparser
 
 load_dotenv()
 
-DB_NAME = os.getenv('DB_NAME')
-USER = os.getenv('USER')
-PASSWORD = os.getenv('PASSWORD')
+DB_NAME = os.getenv("DB_NAME")
+USER = os.getenv("USER")
+PASSWORD = os.getenv("PASSWORD")
 
 
-def create_database_if_not_exists(db_name, user, password, host='localhost', port='5432'):
+def create_database_if_not_exists(
+    db_name, user, password, host="localhost", port="5432"
+):
     """
     Подключение к Postgresql и создание базы данных
     """
     with psycopg2.connect(user=user, password=password, host=host, port=port) as conn:
         with conn.cursor() as cursor:
-            cursor.execute(sql.SQL("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s"), [db_name])
+            cursor.execute(
+                sql.SQL("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s"),
+                [db_name],
+            )
             exists = cursor.fetchone()
     if not exists:
         conn = psycopg2.connect(user=user, password=password, host=host, port=port)
         conn.autocommit = True
         with conn.cursor() as cursor:
-            cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(db_name)))
+            cursor.execute(
+                sql.SQL("CREATE DATABASE {}").format(sql.Identifier(db_name))
+            )
 
 
 create_database_if_not_exists(DB_NAME, USER, PASSWORD)
@@ -34,9 +41,9 @@ DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@localhost/{DB_NAME}"
 
 # Динамическое обновление alembic.ini
 config = configparser.ConfigParser()
-config.read('alembic.ini')
-config['alembic']['sqlalchemy.url'] = DATABASE_URL
-with open('alembic.ini', 'w') as configfile:
+config.read("alembic.ini")
+config["alembic"]["sqlalchemy.url"] = DATABASE_URL
+with open("alembic.ini", "w") as configfile:
     config.write(configfile)
 
 
@@ -49,7 +56,9 @@ class ProductType(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
 
-    products: Mapped[list["Product"]] = relationship("Product", back_populates="product_type")
+    products: Mapped[list["Product"]] = relationship(
+        "Product", back_populates="product_type"
+    )
 
 
 class Product(Base):
@@ -57,6 +66,8 @@ class Product(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
-    product_type_id: Mapped[int] = mapped_column(ForeignKey('product_type.id'))
+    product_type_id: Mapped[int] = mapped_column(ForeignKey("product_type.id"))
 
-    product_type: Mapped[ProductType] = relationship("ProductType", back_populates="products")
+    product_type: Mapped[ProductType] = relationship(
+        "ProductType", back_populates="products"
+    )
