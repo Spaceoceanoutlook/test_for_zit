@@ -1,9 +1,9 @@
 import uvicorn
-from models import DATABASE_URL, Product, ProductType
+from app.models import DATABASE_URL, Product, ProductType
 from sqlalchemy.orm import joinedload, sessionmaker
 from sqlalchemy import create_engine
 from fastapi import FastAPI, Depends
-from schemas import ProductResponse, ProductCreate, TypeCreate, ProductTypeResponse
+from app.schemas import ProductResponse, ProductCreate, TypeCreate, ProductTypeResponse
 
 app = FastAPI()
 

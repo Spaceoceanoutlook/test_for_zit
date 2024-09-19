@@ -8,13 +8,15 @@ import configparser
 
 load_dotenv()
 
-DB_NAME = os.getenv("DB_NAME")
-USER = os.getenv("USER")
-PASSWORD = os.getenv("PASSWORD")
+DB_NAME = os.getenv("POSTGRES_DB")
+USER = os.getenv("POSTGRES_USER")
+PASSWORD = os.getenv("POSTGRES_PASSWORD")
+HOST = "localhost"
+PORT = 5432
 
 
 def create_database_if_not_exists(
-    db_name, user, password, host="localhost", port="5432"
+    db_name, user, password, host, port
 ):
     """
     Подключение к Postgresql и создание базы данных
@@ -35,9 +37,9 @@ def create_database_if_not_exists(
             )
 
 
-create_database_if_not_exists(DB_NAME, USER, PASSWORD)
+create_database_if_not_exists(DB_NAME, USER, PASSWORD, HOST, PORT)
 
-DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@localhost/{DB_NAME}"
+DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
 
 # Динамическое обновление alembic.ini
 config = configparser.ConfigParser()
