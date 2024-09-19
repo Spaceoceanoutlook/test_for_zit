@@ -3,7 +3,7 @@ from models import DATABASE_URL, Product, ProductType
 from sqlalchemy.orm import joinedload, sessionmaker
 from sqlalchemy import create_engine
 from fastapi import FastAPI, Depends
-from schemas import ProductResponse, ProductCreate
+from schemas import ProductResponse, ProductCreate, TypeCreate, ProductTypeResponse
 
 app = FastAPI()
 
@@ -26,13 +26,21 @@ async def get_products(session: Session = Depends(get_db)):
     return products
 
 
+@app.post("/add_type", response_model=ProductTypeResponse)
+async def create_type(product_type: TypeCreate, session: Session = Depends(get_db)):
+    new_type = ProductType(name=product_type.name)
+    session.add(new_type)
+    session.commit()
+    session.refresh(new_type)
+    return new_type
+
+
 @app.post("/add_product", response_model=ProductResponse)
 async def create_product(product: ProductCreate, session: Session = Depends(get_db)):
     new_product = Product(name=product.name, product_type_id=product.product_type_id)
     session.add(new_product)
     session.commit()
     session.refresh(new_product)
-    print(new_product.product_type)
     return new_product
 
 
