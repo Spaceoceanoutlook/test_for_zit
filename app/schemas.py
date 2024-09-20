@@ -17,8 +17,4 @@ class ProductResponse(BaseModel):
 
 class ProductCreate(BaseModel):
     name: str
-    product_type_id: int
-
-
-class TypeCreate(BaseModel):
-    name: str
+    product_type_name: str

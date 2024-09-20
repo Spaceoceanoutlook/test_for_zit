@@ -38,15 +38,7 @@ def create_database_if_not_exists(
 
 
 create_database_if_not_exists(DB_NAME, USER, PASSWORD, HOST, PORT)
-
 DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
-#
-# # Динамическое обновление alembic.ini
-# config = configparser.ConfigParser()
-# config.read("alembic.ini")
-# config["alembic"]["sqlalchemy.url"] = DATABASE_URL
-# with open("../alembic.ini", "w") as configfile:
-#     config.write(configfile)
 
 
 Base = declarative_base()
@@ -68,7 +60,7 @@ class Product(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
-    product_type_id: Mapped[int] = mapped_column(ForeignKey("product_type.id"))
+    product_type_name: Mapped[str] = mapped_column(ForeignKey("product_type.name"))
 
     product_type: Mapped[ProductType] = relationship(
         "ProductType", back_populates="products"
