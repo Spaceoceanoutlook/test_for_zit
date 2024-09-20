@@ -11,7 +11,7 @@ load_dotenv()
 DB_NAME = os.getenv("POSTGRES_DB")
 USER = os.getenv("POSTGRES_USER")
 PASSWORD = os.getenv("POSTGRES_PASSWORD")
-HOST = "localhost"
+HOST = "db"
 PORT = 5432
 
 
@@ -40,13 +40,13 @@ def create_database_if_not_exists(
 create_database_if_not_exists(DB_NAME, USER, PASSWORD, HOST, PORT)
 
 DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
-
-# Динамическое обновление alembic.ini
-config = configparser.ConfigParser()
-config.read("alembic.ini")
-config["alembic"]["sqlalchemy.url"] = DATABASE_URL
-with open("alembic.ini", "w") as configfile:
-    config.write(configfile)
+#
+# # Динамическое обновление alembic.ini
+# config = configparser.ConfigParser()
+# config.read("alembic.ini")
+# config["alembic"]["sqlalchemy.url"] = DATABASE_URL
+# with open("../alembic.ini", "w") as configfile:
+#     config.write(configfile)
 
 
 Base = declarative_base()
