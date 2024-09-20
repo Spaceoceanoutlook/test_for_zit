@@ -4,14 +4,13 @@ from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, ForeignKey
 import os
 from dotenv import load_dotenv
-import configparser
 
 load_dotenv()
 
 DB_NAME = os.getenv("POSTGRES_DB")
 USER = os.getenv("POSTGRES_USER")
 PASSWORD = os.getenv("POSTGRES_PASSWORD")
-HOST = "db"
+HOST = "localhost"
 PORT = 5432
 
 
