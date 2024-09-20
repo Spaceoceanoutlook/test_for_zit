@@ -34,7 +34,7 @@ async def create_product(product: ProductCreate, session: Session = Depends(get_
         session.add(product_type)
         session.commit()
         session.refresh(product_type)
-    new_product = Product(name=product.name, product_type_name=product_type.name)
+    new_product = Product(name=product.name, product_type_id=product_type.id)
     session.add(new_product)
     session.commit()
     session.refresh(new_product)

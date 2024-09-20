@@ -59,7 +59,7 @@ class Product(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
-    product_type_name: Mapped[str] = mapped_column(ForeignKey("product_type.name"))
+    product_type_id: Mapped[int] = mapped_column(ForeignKey("product_type.id"))
 
     product_type: Mapped[ProductType] = relationship(
         "ProductType", back_populates="products"
