@@ -1,11 +1,14 @@
 FROM python:3.12
 RUN apt-get update && apt-get install -y \
+    wget \
     gcc \
     libpq-dev \
     netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY pyproject.toml poetry.lock* ./
+RUN wget -O /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
+    chmod +x /usr/local/bin/wait-for-it.sh
 RUN pip install poetry
 RUN poetry install --no-dev
 COPY . .
