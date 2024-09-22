@@ -1,3 +1,5 @@
+from typing import Union
+
 import uvicorn
 from app.models import DATABASE_URL, Product, ProductType
 from sqlalchemy.orm import joinedload, sessionmaker
@@ -41,8 +43,8 @@ async def create_product(product: ProductCreate, session: Session = Depends(get_
     return new_product
 
 
-@app.get("/products/{product_id}", response_model=list[ProductResponse])
-async def get_products(product_id: int, session: Session = Depends(get_db)):
+@app.get("/products/{product_id}", response_model=ProductResponse)
+async def get_product(product_id: int, session: Session = Depends(get_db)):
     product = (
         session.query(Product)
         .filter(Product.id == product_id)
@@ -52,8 +54,8 @@ async def get_products(product_id: int, session: Session = Depends(get_db)):
     return product
 
 
-@app.get("/products/type/{type_id}", response_model=list[ProductResponse])
-async def get_products(type_id: int, session: Session = Depends(get_db)):
+@app.get("/products/type/{type_id}", response_model=Union[list[ProductResponse], ProductResponse])
+async def get_products_by_type(type_id: int, session: Session = Depends(get_db)):
     product = (
         session.query(Product)
         .join(Product.product_type)

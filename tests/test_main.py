@@ -2,10 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from app.models import Base, Product, ProductType  # Импортируйте ваши модели и приложение
+from app.models import Base, Product, ProductType
 from app.main import app, get_db
 
 # Создание тестовой базы данных
@@ -13,7 +10,7 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Создание базы данных
+# Создание таблиц
 Base.metadata.create_all(bind=engine)
 
 
@@ -35,12 +32,12 @@ def client(test_db):
 
 @pytest.fixture(scope="module", autouse=True)
 def setup_database(test_db):
-    # Заполнение тестовой базы данных
-    product_type = ProductType(name="Electronics")
+    # Тестовое заполнение БД
+    product_type = ProductType(name="Молочное")
     test_db.add(product_type)
     test_db.commit()
 
-    product = Product(name="Smartphone", product_type_id=product_type.id)
+    product = Product(name="Сыр", product_type_id=product_type.id)
     test_db.add(product)
     test_db.commit()
 
@@ -50,4 +47,18 @@ def test_get_products(client):
     assert response.status_code == 200
     assert isinstance(response.json(), list)
     assert len(response.json()) > 0
-    assert response.json()[0]["name"] == "Smartphone"
+    assert response.json()[0]["name"] == "Сыр"
+
+
+def test_create_product(client):
+    product_data = {
+        "name": "Колбаса",
+        "product_type_name": "Мясное"
+    }
+    response = client.post("/products", json=product_data)
+    assert response.status_code == 200
+    created_product = response.json()
+    print(created_product)
+    print(product_data)
+    assert created_product["name"] == product_data["name"]
+    assert created_product["product_type"]["name"] == product_data["product_type_name"]
