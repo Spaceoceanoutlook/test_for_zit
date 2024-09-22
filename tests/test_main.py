@@ -8,7 +8,9 @@ import httpx
 
 # Создание тестовой базы данных
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -31,7 +33,9 @@ async def client(test_db):
 
     app.dependency_overrides[get_db] = get_test_db
 
-    async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
+    async with httpx.AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as c:
         yield c
 
     app.dependency_overrides = {}
@@ -60,10 +64,7 @@ async def test_get_products(client):
 
 @pytest.mark.asyncio
 async def test_create_product(client):
-    product_data = {
-        "name": "Колбаса",
-        "product_type_name": "Мясное"
-    }
+    product_data = {"name": "Колбаса", "product_type_name": "Мясное"}
     response = await client.post("/products", json=product_data)
     assert response.status_code == 200
     created_product = response.json()

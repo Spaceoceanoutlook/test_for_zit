@@ -14,9 +14,7 @@ HOST = "localhost"
 PORT = 5432
 
 
-def create_database_if_not_exists(
-    db_name, user, password, host, port
-):
+def create_database_if_not_exists(db_name, user, password, host, port):
     """
     Подключение к Postgresql и создание базы данных
     """
