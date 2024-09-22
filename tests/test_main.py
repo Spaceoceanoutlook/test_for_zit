@@ -58,7 +58,20 @@ def test_create_product(client):
     response = client.post("/products", json=product_data)
     assert response.status_code == 200
     created_product = response.json()
-    print(created_product)
-    print(product_data)
     assert created_product["name"] == product_data["name"]
     assert created_product["product_type"]["name"] == product_data["product_type_name"]
+
+
+def test_get_product(client):
+    response = client.get("/products/1")
+    assert response.status_code == 200
+    assert isinstance(response.json(), dict)
+    assert "name" in response.json()
+    assert response.json()["name"] == "Сыр"
+
+
+def test_get_products_by_type(client):
+    response = client.get("/products/type/2")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    assert response.json()[0]["product_type"]["name"] == "Мясное"

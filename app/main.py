@@ -1,11 +1,10 @@
-from typing import Union
-
 import uvicorn
-from app.models import DATABASE_URL, Product, ProductType
+from typing import Union
 from sqlalchemy.orm import joinedload, sessionmaker
 from sqlalchemy import create_engine
 from fastapi import FastAPI, Depends
 from app.schemas import ProductResponse, ProductCreate
+from app.models import DATABASE_URL, Product, ProductType
 
 app = FastAPI()
 
@@ -44,12 +43,12 @@ async def create_product(product: ProductCreate, session: Session = Depends(get_
 
 
 @app.get("/products/{product_id}", response_model=ProductResponse)
-async def get_product(product_id: int, session: Session = Depends(get_db)):
+async def get_products(product_id: int, session: Session = Depends(get_db)):
     product = (
         session.query(Product)
         .filter(Product.id == product_id)
         .options(joinedload(Product.product_type))
-        .all()
+        .first()
     )
     return product
 
