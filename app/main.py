@@ -21,13 +21,15 @@ def get_db():
         db.close()
 
 
-@app.get("/products", response_model=list[ProductResponse])
+@app.get("/products", response_model=list[ProductResponse], summary="Получить список продуктов",
+         description="Возвращает список всех доступных продуктов.")
 async def get_products(session: Session = Depends(get_db)):
     products = session.query(Product).options(joinedload(Product.product_type)).all()
     return products
 
 
-@app.post("/products", response_model=ProductResponse)
+@app.post("/products", response_model=ProductResponse, summary="Создать новый продукт",
+          description="Создает новый продукт с указанными параметрами и возвращает его.")
 async def create_product(product: ProductCreate, session: Session = Depends(get_db)):
     product_type = session.query(ProductType).filter(ProductType.name == product.product_type_name).first()
     if not product_type:
@@ -42,7 +44,8 @@ async def create_product(product: ProductCreate, session: Session = Depends(get_
     return new_product
 
 
-@app.get("/products/{product_id}", response_model=ProductResponse)
+@app.get("/products/{product_id}", response_model=ProductResponse, summary="Получить продукт по ID",
+         description="Возвращает продукт с указанным ID.")
 async def get_products(product_id: int, session: Session = Depends(get_db)):
     product = (
         session.query(Product)
@@ -53,7 +56,8 @@ async def get_products(product_id: int, session: Session = Depends(get_db)):
     return product
 
 
-@app.get("/products/type/{type_id}", response_model=Union[list[ProductResponse], ProductResponse])
+@app.get("/products/type/{type_id}", response_model=Union[list[ProductResponse], ProductResponse],
+         summary="Получить продукты по типу", description="Возвращает список продуктов, относящихся к указанному типу.")
 async def get_products_by_type(type_id: int, session: Session = Depends(get_db)):
     product = (
         session.query(Product)
