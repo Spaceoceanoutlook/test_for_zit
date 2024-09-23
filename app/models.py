@@ -20,7 +20,9 @@ def create_database_if_not_exists(db_name, user, password, host, port):
     """
     if os.getenv("TESTING"):
         return
-    with psycopg2.connect(user=user, password=password, dbname=db_name, host=host, port=port) as conn:
+    with psycopg2.connect(
+        user=user, password=password, dbname=db_name, host=host, port=port
+    ) as conn:
         with conn.cursor() as cursor:
             cursor.execute(
                 sql.SQL("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s"),
@@ -28,7 +30,9 @@ def create_database_if_not_exists(db_name, user, password, host, port):
             )
             exists = cursor.fetchone()
     if not exists:
-        conn = psycopg2.connect(user=user, password=password, dbname=db_name, host=host, port=port)
+        conn = psycopg2.connect(
+            user=user, password=password, dbname=db_name, host=host, port=port
+        )
         conn.autocommit = True
         with conn.cursor() as cursor:
             cursor.execute(

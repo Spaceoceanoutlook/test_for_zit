@@ -15,7 +15,9 @@ HOST = os.getenv("POSTGRES_HOST")
 PORT = os.getenv("POSTGRES_PORT")
 
 config = context.config
-config.set_main_option('sqlalchemy.url', f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}")
+config.set_main_option(
+    "sqlalchemy.url", f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
+)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
