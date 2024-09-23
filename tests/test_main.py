@@ -26,7 +26,7 @@ def test_db():
     db.close()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="module", autouse=True)
 async def client(test_db):
     async def get_test_db():
         return test_db
