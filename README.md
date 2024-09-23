@@ -4,8 +4,9 @@
 
 ## **Запуск**
 
-- docker-compose up --build
-- http://127.0.0.1:8000/docs 
+- В терминале команда docker-compose up --build
+- Эндпоинты будут доступны на http://127.0.0.1:8000/docs 
 
 ## **Тестирование**
-- команда pytest в терминале
+
+- docker-compose run web poetry run pytest
