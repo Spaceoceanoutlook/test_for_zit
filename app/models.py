@@ -16,6 +16,8 @@ def create_database_if_not_exists(db_name, user, password):
     """
     Подключение к Postgresql и создание базы данных
     """
+    if os.getenv("TESTING"):
+        return
     with psycopg2.connect(user=user, password=password) as conn:
         with conn.cursor() as cursor:
             cursor.execute(

@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from httpx import ASGITransport
 from sqlalchemy import create_engine
@@ -16,6 +18,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 @pytest.fixture(scope="module", autouse=True)
 def test_db():
+    os.environ["TESTING"] = "1"
     # Удаление всех таблиц и создание новой базы данных и таблиц
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
