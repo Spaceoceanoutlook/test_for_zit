@@ -28,24 +28,13 @@ def test_db():
 
 @pytest.fixture(scope="module", autouse=True)
 async def client(test_db):
-#     async def get_test_db():
-#         return test_db
-#
-#     app.dependency_overrides[get_db] = get_test_db
-#
-#     async with httpx.AsyncClient(
-#         transport=ASGITransport(app=app), base_url="http://test"
-#     ) as c:
-#         yield c
-#
-#     app.dependency_overrides = {}
-    async def get_test_db():
-        return test_db
+    # async def get_test_db():
+    #     return test_db
 
-    app.dependency_overrides[get_db] = get_test_db
+    app.dependency_overrides[get_db] = test_db
 
     async with httpx.AsyncClient(
-            transport=ASGITransport(app=app), base_url="http://test"
+        transport=ASGITransport(app=app), base_url="http://test"
     ) as c:
         yield c
 
