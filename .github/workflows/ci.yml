@@ -30,6 +30,10 @@ jobs:
         run: |
           poetry install
 
+      - name: List test files
+        run: |
+          ls -R
+
       - name: Run black
         run: |
           poetry run black --check .
